@@ -1,5 +1,6 @@
 package com.example.restservice.service;
 
+import com.example.restservice.exception.PetExistException;
 import com.example.restservice.exception.PetNotFoundException;
 import com.example.restservice.model.Address;
 import com.example.restservice.model.City;
@@ -35,20 +36,23 @@ public class PetService {
         if (pet != null){
             return pet;
         }
-        throw  new PetNotFoundException("Pet is not available");
+        throw  new PetNotFoundException("Pet with " + id + " is not available");
     }
 
     public Pet getByOwnerName(String ownerName){
-        for(Pet p : pets){
-            if (p.getOwner().getName().equals(ownerName)){
-                return p;
-            }
+        Pet fetchedPet = this.findByOwnerName(ownerName);
+        if (fetchedPet != null){
+            return fetchedPet;
         }
-        return null;
+        throw new PetNotFoundException("Pet with name " + ownerName + " does not exist");
     }
 
     public void addPet(Pet pet){
-        pets.add(pet);
+        Pet fetchedPet = this.findByOwnerName(pet.getOwner().getName());
+        if (fetchedPet == null){
+            pets.add(pet);
+        }
+        throw new PetExistException("Pet with the name of owner"+ pet.getOwner().getName() + " Already exists");
     }
 
     public void updatePet(int id, Pet pet){
@@ -70,6 +74,15 @@ public class PetService {
     private Pet findById(int id){
         for(Pet p : pets){
             if (p.getId() == id){
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private Pet findByOwnerName(String ownerName){
+        for(Pet p : pets){
+            if (p.getOwner().getName().equals(ownerName)){
                 return p;
             }
         }
