@@ -1,5 +1,6 @@
 package com.example.restservice.service;
 
+import com.example.restservice.exception.PetNotFoundException;
 import com.example.restservice.model.Address;
 import com.example.restservice.model.City;
 import com.example.restservice.model.Owner;
@@ -30,8 +31,16 @@ public class PetService {
     }
 
     public Pet getById(int id){
+        Pet pet = findById(id);
+        if (pet != null){
+            return pet;
+        }
+        throw  new PetNotFoundException("Pet is not available");
+    }
+
+    public Pet getByOwnerName(String ownerName){
         for(Pet p : pets){
-            if (p.getId() == id){
+            if (p.getOwner().getName().equals(ownerName)){
                 return p;
             }
         }
@@ -40,5 +49,30 @@ public class PetService {
 
     public void addPet(Pet pet){
         pets.add(pet);
+    }
+
+    public void updatePet(int id, Pet pet){
+        //find the pet and update it
+        Pet fetchedPet = this.findById(id);
+        if(fetchedPet != null){
+            fetchedPet = pet;
+           //update pet !!!! => will teach database next week!!!
+        }
+    }
+
+    public void deletePet(int id){
+        Pet fetchedPet = this.findById(id);
+        if(fetchedPet != null){
+            //delete pet !!!! => will teach database next week!!!
+        }
+    }
+
+    private Pet findById(int id){
+        for(Pet p : pets){
+            if (p.getId() == id){
+                return p;
+            }
+        }
+        return null;
     }
 }

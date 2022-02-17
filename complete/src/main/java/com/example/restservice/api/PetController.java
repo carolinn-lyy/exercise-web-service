@@ -1,7 +1,10 @@
 package com.example.restservice.api;
 
+import com.example.restservice.exception.PetNotFoundException;
 import com.example.restservice.model.Pet;
 import com.example.restservice.service.PetService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +22,21 @@ public class PetController {
     //I want to use the same route => (/pet) but I want to send an id to filter the data
     //PathVariable
     @GetMapping("/pet/{id}")
-    public Pet getPetById(@PathVariable int id){
-        return petService.getById(id);
+    public ResponseEntity<Pet> getPetById(@PathVariable int id) {
+        try{
+            return new ResponseEntity<Pet>(petService.getById(id), HttpStatus.OK);
+        }
+        catch(PetNotFoundException petNotFoundException ){
+            return new ResponseEntity(petNotFoundException.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+
+
+    }
+
+    @GetMapping("/pet/ownername/{name}")
+    public Pet getPetByOwnerName(@PathVariable String name){
+        return petService.getByOwnerName(name);
     }
 
     //POST
@@ -30,8 +46,23 @@ public class PetController {
         return pet;
     }
 
+
+    //swagger
+
     //PUT
+    @PutMapping("/pet/{id}")
+    public Pet modifyPet(@PathVariable int id, @RequestBody Pet pet){
+        petService.updatePet(id, pet);
+        return pet;
+    }
 
     //DELETE
+    @DeleteMapping("/pet/{id}")
+    public void deletePet(@PathVariable int id){
+        petService.deletePet(id);
+    }
+
+    //CRUD operation => Create, READ, Update and delete
+
 }
 
