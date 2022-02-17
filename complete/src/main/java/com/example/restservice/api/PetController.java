@@ -5,10 +5,7 @@ import com.example.restservice.model.City;
 import com.example.restservice.model.Owner;
 import com.example.restservice.model.Pet;
 import com.example.restservice.service.PetService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +33,16 @@ public class PetController {
             }
         }
         return null;
-        //JAVA 8 lambda expression
-//        return pets.stream().filter(pet -> pet.getId() == id).findFirst().get();
-
 
     }
 
     //POST
+    @PostMapping("/pet")
+    public Pet savePet(@RequestBody Pet pet){
+        PetService service = new PetService();
+        service.addPet(pet);
+        return pet;
+    }
 
     //PUT
 
