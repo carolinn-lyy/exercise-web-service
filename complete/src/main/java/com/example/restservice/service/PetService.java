@@ -13,7 +13,7 @@ public class PetService {
     static List<Pet> pets = new ArrayList<>();
 
     public List<Pet> getAllPets(){
-        
+
         Pet pet1 = new Pet(1, new Owner("A", new Address(100, "Rose",
                 new City("Verdun", "QC")), "111111"));
         Pet pet2 = new Pet(2, new Owner("B", new Address(200, "Cat",
@@ -27,6 +27,15 @@ public class PetService {
         pets.add(pet3);
 
         return pets;
+    }
+
+    public Pet getById(int id){
+        for(Pet p : pets){
+            if (p.getId() == id){
+                return p;
+            }
+        }
+        return null;
     }
 
     public void addPet(Pet pet){
