@@ -35,10 +35,15 @@ public class PetController {
     }
 
     @GetMapping("/pet/ownername/{name}")
-    public Pet getPetByOwnerName(@PathVariable String name){
+    public ResponseEntity<Pet> getPetByOwnerName(@PathVariable String name){
 
         //add exception
-        return petService.getByOwnerName(name);
+        try{
+            return new ResponseEntity<>(petService.getByOwnerName(name), HttpStatus.OK);
+        }
+        catch(PetNotFoundException petNotFoundException){
+            return new ResponseEntity(petNotFoundException.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     //POST
